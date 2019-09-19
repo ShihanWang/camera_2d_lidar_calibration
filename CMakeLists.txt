@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(camera_2d_lidar_calibration)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+ add_compile_options(-std=c++11) #add by me 
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -11,6 +11,13 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
 )
+
+#########add by me ##########
+
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV 3 REQUIRED)
+find_package(Ceres REQUIRED)
+##############################
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -115,10 +122,19 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
+  ${CERES_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
+  ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
 )
 
+add_executable(calibration src/camera_laser_calibration.cc)
+target_link_libraries(calibration 
+  ${catkin_LIBRARIES}  
+  ${OpenCV_LIBS}
+  # ${EIGEN3_LIBS}
+  ${CERES_LIBRARIES}
+)
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/camera_2d_lidar_calibration.cpp
