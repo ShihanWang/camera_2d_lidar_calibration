@@ -18,14 +18,19 @@ def rmse(objp, imgp, lens, K, D, rvec, tvec):
     imgp = imgp.squeeze()
 
     pix_serr = []
+    pix_pixel = []
     for i in range(len(predicted)):
         xp = predicted[i,0]
         yp = predicted[i,1]
         xo = imgp[i,0]
         yo = imgp[i,1]
+        pix_pixel.append(math.sqrt((xp-xo)**2 + (yp-yo)**2))
         pix_serr.append((xp-xo)**2 + (yp-yo)**2)
     ssum = sum(pix_serr)
-
+    psum = sum(pix_pixel)
+    print("Max in pixel =: %f" % max(pix_pixel))
+    print("Min in pixel =: %f" % min(pix_pixel))
+    print("Mean in pixel =: %f" % (psum/len(pix_pixel)))
     return math.sqrt(ssum/len(pix_serr))
 
 if len(sys.argv) == 6:

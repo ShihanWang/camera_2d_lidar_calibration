@@ -126,11 +126,26 @@ int main(int argc, char *argv[])
         cv::Mat t_vec = (Mat_<double>(3, 1) << init_t(0), init_t(1), init_t(2));
         cv::projectPoints(ConvertPointsFormat(laser_points), r_vec, t_vec, K, D, projected_points);
         double sum = 0;
+        double max_pixel = 0, min_pixel = 100, mean_pixel, sum_pixel = 0;        
         for(int i = 0; i < projected_points.size(); ++i)
         {
+            double p = sqrt(pow(projected_points[i].x - image_points[i].x(),2) + pow(projected_points[i].y - image_points[i].y(),2));
+            if(max_pixel < p)
+            {
+                max_pixel = p;
+            }
+            if(min_pixel > p)
+            {
+                min_pixel = p;
+            }
+            sum_pixel += p;
             sum += pow(projected_points[i].x - image_points[i].x(),2) + pow(projected_points[i].y - image_points[i].y(),2);
         }
         sum = sqrt(sum / projected_points.size());
+        sum_pixel /= projected_points.size();
+        cout << "Max in pixel =: " << max_pixel << endl;
+        cout << "Min in pixel =: " << min_pixel << endl;
+        cout << "Mean in pixel =: " << sum_pixel << endl;
         cout << "RMSE in pixel =: " << sum << endl;
         cout << "Save optimized result in: " << output_path << endl;
     }
